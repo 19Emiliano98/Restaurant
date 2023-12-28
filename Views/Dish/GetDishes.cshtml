@@ -1,0 +1,27 @@
+﻿@model List<Dish>
+
+<h1>Platos</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <td>Nombre</td>
+            <td>Categoria</td>
+            <td>Tiempo de espera</td>
+            <td>Precio</td>
+            <td>TAC</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach( var dishes in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor( x => dishes.DishName )</td>
+                <td>@Html.DisplayFor( x => dishes.DishCategoryNavigation.DishCategoryName )</td>
+                <td>@Html.DisplayFor( x => dishes.DishFinishTime )</td>
+                <td>@Html.DisplayFor( x => dishes.DishPrice ) U$D</td>
+                <td>@if( dishes.DishTac == 1) { <p>No</p> }else{ <p>Si</p> }</td>
+            </tr>
+        }
+    </tbody>
+</table>
