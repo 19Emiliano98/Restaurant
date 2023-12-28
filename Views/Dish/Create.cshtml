@@ -1,0 +1,54 @@
+﻿@using Restaurant.Models.ViewModels
+@model DishViewModel
+
+<h1>Creacion del Plato</h1>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="DishName" class="control-label"></label>
+                <input asp-for="DishName" class="form-control" />
+                <span asp-validation-for="DishName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DishCategoryId" class="control-label"></label>
+                <select asp-for="DishCategoryId" class="form-control" asp-items="ViewBag.PlatoNuevo"></select>
+                <span asp-validation-for="DishCategoryId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DishFinishTime" class="control-label"></label>
+                <input asp-for="DishFinishTime" class="form-control" />
+                <span asp-validation-for="DishFinishTime" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DishPrice" class="control-label"></label>
+                <input asp-for="DishPrice" class="form-control" />
+                <span asp-validation-for="DishPrice" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DishTac" class="control-label"></label>
+                <input asp-for="DishTac" class="form-control" />
+                <span asp-validation-for="DishTac" class="text-danger"></span>
+            </div>
+
+            <div class="for-group">
+                <input type="submit" value="Crear" class="btn btn-primary"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
