@@ -1,14 +1,22 @@
-﻿@model Restaurant.Models.ViewModels.DishViewModel
+﻿@model Restaurant.Models.Dish
 
-<h3>Creacion del Plato</h3>
+@* @{
+    ViewData["Title"] = "Edit";
+} *@
+
+<h1>Edit</h1>
+
+<h4>Plato</h4>
 
 <hr />
 
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
+            
+            <input type="hidden" asp-for="DishId" />
+            
             <div class="form-group">
                 <label asp-for="DishName" class="control-label"></label>
                 <input asp-for="DishName" class="form-control" />
@@ -16,9 +24,9 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="DishCategoryId" class="control-label"></label>
-                <select asp-for="DishCategoryId" class="form-control" asp-items="ViewBag.PlatoNuevo"></select>
-                <span asp-validation-for="DishCategoryId" class="text-danger"></span>
+                <label asp-for="DishCategory" class="control-label"></label>
+                <select asp-for="DishCategory" class="form-control" asp-items="ViewBag.EditPlato"></select>
+                <span asp-validation-for="DishCategory" class="text-danger"></span>
             </div>
 
             <div class="form-group">
@@ -38,16 +46,18 @@
                 <input asp-for="DishTac" class="form-control" />
                 <span asp-validation-for="DishTac" class="text-danger"></span>
             </div>
-
-            <div class="for-group">
-                <input type="submit" value="Crear" class="btn btn-primary"/>
+            
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
-@section Scripts{
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+<div>
+    <a asp-action="GetDishes">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

@@ -18,7 +18,7 @@ namespace Restaurant.Controllers
 
             return View( await dishes.ToListAsync());
         }
-
+        
         public IActionResult Create()
         {
             ViewData["PlatoNuevo"] = new SelectList(_context.DishCategories, "DishCategoryId", "DishCategoryName");
@@ -50,8 +50,66 @@ namespace Restaurant.Controllers
             }
 
             ViewData["PlatoNuevo"] = new SelectList(_context.DishCategories, "DishCategoryId", "DishCategoryName", model.DishCategoryId);
+            // Este viewdata lo dejo comentado porque yo pienso que no es necesario, voy a hacer testing antes de borrarlo definitivamente
 
             return View();
+        }
+
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null || _context.Dishes == null)
+            {
+                return NotFound();
+            }
+
+            var dish = await _context.Dishes.FindAsync(id);
+            
+            if (dish == null)
+            {
+                return NotFound();
+            }
+
+            ViewData["EditPlato"] = new SelectList(_context.DishCategories, "DishCategoryId", "DishCategoryName");
+
+            return View(dish);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, Dish dish)
+        {
+            if (id != dish.DishId)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(dish);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!UsuarioExists(dish.DishId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(dish);
+        }
+
+        private bool UsuarioExists(int dishId)
+        {
+            return (_context.Dishes?.Any(e => e.DishId == dishId)).GetValueOrDefault();
         }
     }
 }

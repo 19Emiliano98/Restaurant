@@ -2,7 +2,7 @@
 
 <h1>Platos</h1>
 
-<h3><a asp-action="Create">Crear un nuevo plato</a></h3>
+<h5><a asp-action="Create">Crear un nuevo plato</a></h5>
 
 <table class="table">
     <thead>
@@ -23,6 +23,8 @@
                 <td>@Html.DisplayFor( x => dishes.DishFinishTime )</td>
                 <td>@Html.DisplayFor( x => dishes.DishPrice ) U$D</td>
                 <td>@if( dishes.DishTac == 0) { <p>No</p> }else{ <p>Si</p> }</td>
+                
+                <td><a asp-action="Edit" class="btn btn-warning" asp-route-id="@dishes.DishId">Edit</a></td>
             </tr>
         }
     </tbody>
