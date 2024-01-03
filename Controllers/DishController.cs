@@ -55,6 +55,10 @@ namespace Restaurant.Controllers
             return View();
         }
 
+        //
+        // Update
+        //
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Dishes == null)
@@ -74,9 +78,9 @@ namespace Restaurant.Controllers
             return View(dish);
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("Update")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Dish dish)
+        public async Task<IActionResult> Edit(int id, [Bind("DishId, DishName, DishCategory, DishFinishTime, DishPrice, DishTac")] Dish dish)
         {
             if (id != dish.DishId)
             {
@@ -101,11 +105,54 @@ namespace Restaurant.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+
+                return RedirectToAction(nameof(GetDishes));
+            }
+
+            ViewData["EditPlato"] = new SelectList(_context.DishCategories, "DishCategoryId", "DishCategoryName");
+
+            return View(dish);
+        }
+
+        //
+        //Delete
+        //
+
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null || _context.Dishes == null)
+            {
+                return NotFound();
+            }
+
+            var dish = await _context.Dishes.FirstOrDefaultAsync(m => m.DishId == id);
+            
+            if (dish == null)
+            {
+                return NotFound();
             }
 
             return View(dish);
         }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            if (_context.Dishes == null)
+            {
+                return Problem("Entity set 'RestaurantContext.Dish'  is null.");
+            }
+            var dish = await _context.Dishes.FindAsync(id);
+            if (dish != null)
+            {
+                _context.Dishes.Remove(dish);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(GetDishes));
+        }
+
 
         private bool UsuarioExists(int dishId)
         {
