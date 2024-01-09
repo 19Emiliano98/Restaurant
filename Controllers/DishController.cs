@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using MVC.Models;
+using MVC.Models.DishViewModel;
 using Restaurant.Models;
-using Restaurant.Models.ViewModels;
 using System.Data;
 using System.Net;
 using System.Reflection;
@@ -113,30 +114,6 @@ namespace Restaurant.Controllers
             {
                 return NotFound();
             }
-
-
-            //if (ModelState.IsValid)
-            //{
-
-            //    try
-            //    {
-            //        _context.Update(dish);
-
-            //        await _context.SaveChangesAsync();
-            //    }
-            //    catch (DbUpdateConcurrencyException)
-            //    {
-            //        if (!UsuarioExists(dish.DishId))
-            //        {
-            //            return NotFound();
-            //        }
-            //        else
-            //        {
-            //            throw;
-            //        }
-            //    }
-            //    return RedirectToAction(nameof(GetDishes));
-            //}
             
             ViewData["EditPlato"] = new SelectList(_context.DishCategories, "DishCategoryId", "DishCategoryName");
 
@@ -157,10 +134,8 @@ namespace Restaurant.Controllers
                     throw;
                 }
             }
+            
             return RedirectToAction(nameof(GetDishes));
-
-
-            //return View(dish);
         }
 
         //

@@ -14,4 +14,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MVC.Models\MVC.Models.csproj" />
+    <ProjectReference Include="..\MVC.Services\MVC.Services.csproj" />
+  </ItemGroup>
+
 </Project>
