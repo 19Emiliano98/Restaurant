@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Restaurant.Models;
 using Restaurant.Models.ViewModels;
+using System.Data;
+using System.Net;
+using System.Reflection;
 
 namespace Restaurant.Controllers
 {
@@ -14,11 +17,32 @@ namespace Restaurant.Controllers
 
         public async Task<IActionResult> GetDishes()
         {
-            var dishes = _context.Dishes.Include(x => x.DishCategoryNavigation );
+            var dishes = _context.Dishes.Include(x => x.DishCategoryNavigation);
 
-            return View( await dishes.ToListAsync());
+            return View(await dishes.ToListAsync());
         }
-        
+
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null || _context.Dishes == null)
+            {
+                return NotFound();
+            }
+
+            var dish = await _context.Dishes.FirstOrDefaultAsync(m => m.DishId == id);
+
+            if (dish == null)
+            {
+                return NotFound();
+            }
+
+            return View(dish);
+        }
+
+        //
+        // Post
+        //
+
         public IActionResult Create()
         {
             ViewData["PlatoNuevo"] = new SelectList(_context.DishCategories, "DishCategoryId", "DishCategoryName");
@@ -31,7 +55,7 @@ namespace Restaurant.Controllers
         public async Task<IActionResult> Create(DishViewModel model)
         {
 
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var dish = new Dish()
                 {
@@ -75,43 +99,68 @@ namespace Restaurant.Controllers
 
             ViewData["EditPlato"] = new SelectList(_context.DishCategories, "DishCategoryId", "DishCategoryName");
 
+            
+
             return View(dish);
         }
 
-        [HttpPost, ActionName("Update")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DishId, DishName, DishCategory, DishFinishTime, DishPrice, DishTac")] Dish dish)
+        public async Task<IActionResult> Edit(int id,[Bind("DishId,DishName,DishCategory,DishFinishTime,DishPrice,DishTac")] Dish dish)
         {
+
             if (id != dish.DishId)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(dish);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UsuarioExists(dish.DishId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
 
-                return RedirectToAction(nameof(GetDishes));
-            }
+            //if (ModelState.IsValid)
+            //{
 
+            //    try
+            //    {
+            //        _context.Update(dish);
+
+            //        await _context.SaveChangesAsync();
+            //    }
+            //    catch (DbUpdateConcurrencyException)
+            //    {
+            //        if (!UsuarioExists(dish.DishId))
+            //        {
+            //            return NotFound();
+            //        }
+            //        else
+            //        {
+            //            throw;
+            //        }
+            //    }
+            //    return RedirectToAction(nameof(GetDishes));
+            //}
+            
             ViewData["EditPlato"] = new SelectList(_context.DishCategories, "DishCategoryId", "DishCategoryName");
 
-            return View(dish);
+            try
+            {
+                _context.Update(dish);
+
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UsuarioExists(dish.DishId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(GetDishes));
+
+
+            //return View(dish);
         }
 
         //
@@ -143,13 +192,16 @@ namespace Restaurant.Controllers
             {
                 return Problem("Entity set 'RestaurantContext.Dish'  is null.");
             }
+            
             var dish = await _context.Dishes.FindAsync(id);
+            
             if (dish != null)
             {
                 _context.Dishes.Remove(dish);
             }
 
             await _context.SaveChangesAsync();
+            
             return RedirectToAction(nameof(GetDishes));
         }
 

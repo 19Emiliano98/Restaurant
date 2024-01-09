@@ -2,7 +2,7 @@
 
 <h1>Platos</h1>
 
-<h5><a asp-action="Create">Crear un nuevo plato</a></h5>
+<h5><a asp-action="Create" class="btn btn-success">Crear un nuevo plato</a></h5>
 
 <table class="table">
     <thead>
@@ -26,6 +26,7 @@
                 <td>@if( dishes.DishTac == 0) { <p>No</p> }else{ <p>Si</p> }</td>
                 
                 <td>
+                    <a asp-action="Details" class="btn btn-primary" asp-route-id="@dishes.DishId">Details</a>
                     <a asp-action="Edit" class="btn btn-info" asp-route-id="@dishes.DishId">Edit</a>
                     <a asp-action="Delete" class="btn btn-danger" asp-route-id="@dishes.DishId">Delete</a>
                 </td>
